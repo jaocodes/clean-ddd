@@ -1,5 +1,4 @@
 import { expect, test } from 'vitest'
-import { Answer } from '../entities/answer'
 import { AnswerQuestionUseCase } from './answer-question'
 
 test('create an answer', () => {
