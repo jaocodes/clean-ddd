@@ -5,7 +5,7 @@ import { Slug } from './value-objets/slug'
 
 interface QuestionProps {
   title: string
-  slug?: Slug
+  slug: Slug
   content: string
   bestAnswerId?: UniqueEntityID
   authorId: UniqueEntityID
