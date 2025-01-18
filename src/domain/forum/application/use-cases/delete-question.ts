@@ -20,7 +20,7 @@ export class DeleteQuestionUseCase {
     if (!question) throw new Error('Question not found!')
 
     if (authorId !== question.authorId.toString())
-      throw new Error('Not allowerd')
+      throw new Error('Not allowed')
 
     await this.questionsRepository.delete(question)
 
