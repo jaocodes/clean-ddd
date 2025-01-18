@@ -1,9 +1,9 @@
+import { UniqueEntityID } from '@/core/entities/unique-entity-id'
+import { makeQuestion } from 'test/factories/make-question'
 import { InMemoryQuestionsRepository } from 'test/repositories/in-memory-questions-repository'
-import { GetQuestionBySlugUseCase } from './get-question-by-slug'
-import { makeQuestion } from 'test/factories/make-questions'
 import { Slug } from '../../enterprise/entities/value-objets/slug'
 import { DeleteQuestionUseCase } from './delete-question'
-import { UniqueEntityID } from '@/core/entities/unique-entity-id'
+import { GetQuestionBySlugUseCase } from './get-question-by-slug'
 
 let inMemoryQuestionsRepository: InMemoryQuestionsRepository
 let sut: DeleteQuestionUseCase
