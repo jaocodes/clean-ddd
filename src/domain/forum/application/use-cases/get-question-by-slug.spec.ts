@@ -23,5 +23,10 @@ describe('Get question by slug use-case', () => {
     })
 
     expect(isRight()).toBe(true)
+    expect(value).toMatchObject({
+      question: expect.objectContaining({
+        title: newQuestion.title,
+      }),
+    })
   })
 })
