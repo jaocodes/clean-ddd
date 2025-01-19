@@ -22,15 +22,15 @@ describe('Comment on answer use-case', () => {
     const answer = makeAnswer()
     await inMemoryAnswersRepository.create(answer)
 
-    const { answerComment } = await sut.execute({
+    const { isLeft, isRight, value } = await sut.execute({
       authorId: 'comment-author',
       content: 'comment content',
       answerId: answer.id.toString(),
     })
 
-    expect(answerComment.id).toBeTruthy()
-    expect(inMemoryAnswerCommentsRepository.items[0].id).toEqual(
-      answerComment.id,
+    expect(isRight()).toBe(true)
+    expect(inMemoryAnswerCommentsRepository.items[0].content).toEqual(
+      'comment content',
     )
   })
 })

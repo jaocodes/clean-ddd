@@ -18,8 +18,10 @@ describe('Get question by slug use-case', () => {
     })
     await inMemoryQuestionsRepository.create(newQuestion)
 
-    const { question } = await sut.execute({ slug: 'example-question' })
+    const { isLeft, isRight, value } = await sut.execute({
+      slug: 'example-question',
+    })
 
-    expect(question.id).toBeTruthy()
+    expect(isRight()).toBe(true)
   })
 })
