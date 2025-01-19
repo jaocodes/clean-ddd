@@ -15,7 +15,6 @@ describe('Create an answer use-case', () => {
       instructorId: '1',
       questionId: '1',
     })
-    console.log(value)
 
     expect(isRight()).toBe(true)
     expect(inMemoryAnswersRepository.items[0]).toEqual(value?.answer)
