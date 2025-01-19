@@ -32,7 +32,7 @@ export class InMemoryQuestionsRepository implements QuestionsRepository {
     return questions
   }
 
-  async create(question: Question): Promise<void> {
+  async create(question: Question) {
     this.items.push(question)
   }
 
