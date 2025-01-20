@@ -1,14 +1,14 @@
 import type { Optional } from '@/core/@types/optional'
-import type { UniqueEntityID } from '@/core/entities/unique-entity-id'
-import { Slug } from './value-objets/slug'
 import { AggregateRoot } from '@/core/entities/aggregate-root'
-import type { QuestionAttachment } from './question-attachment'
+import type { UniqueEntityID } from '@/core/entities/unique-entity-id'
+import { QuestionAttachmentList } from './question-attachment-list'
+import { Slug } from './value-objets/slug'
 
 export interface QuestionProps {
   title: string
   slug: Slug
   content: string
-  attachments: QuestionAttachment[]
+  attachments: QuestionAttachmentList
   bestAnswerId?: UniqueEntityID
   authorId: UniqueEntityID
   createdAt: Date
@@ -25,7 +25,7 @@ export class Question extends AggregateRoot<QuestionProps> {
         ...props,
         slug: props.slug ?? Slug.createFromText(props.title),
         createdAt: props.createdAt ?? new Date(),
-        attachments: props.attachments || [],
+        attachments: props.attachments || new QuestionAttachmentList(),
       },
       id,
     )
@@ -53,7 +53,7 @@ export class Question extends AggregateRoot<QuestionProps> {
   get attachments() {
     return this.props.attachments
   }
-  set attachments(attachments: QuestionAttachment[]) {
+  set attachments(attachments: QuestionAttachmentList) {
     this.props.attachments = attachments
   }
 
