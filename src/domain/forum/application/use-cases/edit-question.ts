@@ -60,11 +60,7 @@ export class EditQuestionUseCase {
       })
     })
 
-    // console.log(JSON.stringify(attachments, null, 2))
-
     questionAttachmentList.update(attachments)
-
-    console.log(JSON.stringify(questionAttachmentList.getNewItems(), null, 2))
 
     question.title = title
     question.content = content
