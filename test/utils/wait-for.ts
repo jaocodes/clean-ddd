@@ -13,7 +13,6 @@ export async function waitFor(
 ): Promise<void> {
   return new Promise((resolve, reject) => {
     let elapsedTime = 0
-    console.log(elapsedTime)
 
     const interval = setInterval(() => {
       elapsedTime += 10
