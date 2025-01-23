@@ -48,5 +48,6 @@ export class InMemoryAnswersRepository implements AnswersRepository {
     const indexToSave = this.items.findIndex((item) => item.id === answer.id)
 
     this.items[indexToSave] = answer
+    DomainEvents.dispatchEventsForAggregate(answer.id)
   }
 }
