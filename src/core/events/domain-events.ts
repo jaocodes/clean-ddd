@@ -2,69 +2,80 @@ import type { AggregateRoot } from '../entities/aggregate-root'
 import type { UniqueEntityID } from '../entities/unique-entity-id'
 import type { DomainEvent } from './domain-event'
 
-type DomainEventCallback = (event: any) => void
+type DomainEventCallback<T extends DomainEvent> = (event: T) => void
 
-// biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
+// biome-ignore lint/complexity/noStaticOnlyClass: <Classe de controle para os eventos de dominio não precisa ser instanciada>
 export class DomainEvents {
-  private static handlersMap: Record<string, DomainEventCallback[]> = {}
-  private static markedAggregates: AggregateRoot<any>[] = []
+  private static handlersMap: Record<
+    string,
+    DomainEventCallback<DomainEvent>[]
+  > = {}
+  private static markedAggregates: AggregateRoot<unknown>[] = []
 
-  public static markAggregateForDispatch(aggregate: AggregateRoot<any>) {
-    const aggregateFound = !!this.findMarkedAggregateByID(aggregate.id)
+  public static markAggregateForDispatch(aggregate: AggregateRoot<unknown>) {
+    const aggregateFound = !!DomainEvents.findMarkedAggregateByID(aggregate.id)
     if (!aggregateFound) {
-      this.markedAggregates.push(aggregate)
+      DomainEvents.markedAggregates.push(aggregate)
     }
   }
 
-  private static dispatchAggregateEvents(aggregate: AggregateRoot<any>) {
-    aggregate.domainEvents.forEach((event: DomainEvent) => this.dispatch(event))
+  private static dispatchAggregateEvents(aggregate: AggregateRoot<unknown>) {
+    for (const event of aggregate.domainEvents) {
+      DomainEvents.dispatch(event)
+    }
   }
 
   private static removeAggregateFromMarkedDispatchList(
-    aggregate: AggregateRoot<any>,
+    aggregate: AggregateRoot<unknown>,
   ) {
-    const index = this.markedAggregates.findIndex((a) => a.equals(aggregate))
-    this.markedAggregates.splice(index, 1)
+    const index = DomainEvents.markedAggregates.findIndex((a) =>
+      a.equals(aggregate),
+    )
+    DomainEvents.markedAggregates.splice(index, 1)
   }
 
   private static findMarkedAggregateByID(
     id: UniqueEntityID,
-  ): AggregateRoot<any> | undefined {
-    return this.markedAggregates.find((aggregate) => aggregate.id.equals(id))
+  ): AggregateRoot<unknown> | undefined {
+    return DomainEvents.markedAggregates.find((aggregate) =>
+      aggregate.id.equals(id),
+    )
   }
   public static dispatchEventsForAggregate(id: UniqueEntityID) {
-    const aggregate = this.findMarkedAggregateByID(id)
+    const aggregate = DomainEvents.findMarkedAggregateByID(id)
     if (aggregate) {
-      this.dispatchAggregateEvents(aggregate)
+      DomainEvents.dispatchAggregateEvents(aggregate)
       aggregate.clearEvents()
-      this.removeAggregateFromMarkedDispatchList(aggregate)
+      DomainEvents.removeAggregateFromMarkedDispatchList(aggregate)
     }
   }
 
-  public static register(
-    callback: DomainEventCallback,
+  public static register<T extends DomainEvent>(
+    callback: DomainEventCallback<T>,
     eventClassName: string,
   ) {
-    const wasEventRegisteredBefore = eventClassName in this.handlersMap
+    const wasEventRegisteredBefore = eventClassName in DomainEvents.handlersMap
     if (!wasEventRegisteredBefore) {
-      this.handlersMap[eventClassName] = []
+      DomainEvents.handlersMap[eventClassName] = []
     }
-    this.handlersMap[eventClassName].push(callback)
+    DomainEvents.handlersMap[eventClassName].push(
+      callback as DomainEventCallback<DomainEvent>,
+    )
   }
 
   public static clearHandlers() {
-    this.handlersMap = {}
+    DomainEvents.handlersMap = {}
   }
 
   public static clearMarkedAggregates() {
-    this.markedAggregates = []
+    DomainEvents.markedAggregates = []
   }
 
   private static dispatch(event: DomainEvent) {
     const eventClassName: string = event.constructor.name
-    const isEventRegistered = eventClassName in this.handlersMap
+    const isEventRegistered = eventClassName in DomainEvents.handlersMap
     if (isEventRegistered) {
-      const handlers = this.handlersMap[eventClassName]
+      const handlers = DomainEvents.handlersMap[eventClassName]
       for (const handler of handlers) {
         handler(event)
       }
